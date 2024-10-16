@@ -4,33 +4,25 @@ import sys
 import argparse
 
 def create_virtual_env(project_name):
-    """Create a virtual environment and install necessary packages."""
-    # Create a virtual environment
     subprocess.check_call([sys.executable, "-m", "venv", f"{project_name}/venv"])
 
-    # Path to the pip executable
-    if os.name == 'nt':  # For Windows
+    if os.name == 'nt':
         pip_path = f"{project_name}/venv/Scripts/pip"
-    else:  # For macOS/Linux
+    else:
         pip_path = f"{project_name}/venv/bin/pip"
 
-    # Install packages
     try:
-        # Call pip to install the requirements
         subprocess.check_call([pip_path, "install", "-r", f"{project_name}/requirements.txt"])
     except subprocess.CalledProcessError as e:
         print(f"Error during package installation: {e}")
         sys.exit(1)
 
 def create_fastapi_structure(project_name):
-    """Create the directory structure and necessary files for a FastAPI project."""
-    # Create project directories
     os.makedirs(f"{project_name}/app/models", exist_ok=True)
     os.makedirs(f"{project_name}/app/schemas", exist_ok=True)
     os.makedirs(f"{project_name}/app/crud", exist_ok=True)
     os.makedirs(f"{project_name}/alembic/versions", exist_ok=True)
 
-    # Create app/main.py
     with open(f"{project_name}/app/main.py", "w") as f:
         f.write("""from fastapi import FastAPI
 from .routes import router
@@ -44,7 +36,6 @@ Base.metadata.create_all(bind=engine)
 app.include_router(router)
 """)
 
-    # Create app/models/user.py
     with open(f"{project_name}/app/models/user.py", "w") as f:
         f.write("""from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
@@ -60,7 +51,6 @@ class User(Base):
     full_name = Column(String, nullable=True)
 """)
 
-    # Create app/schemas/user.py
     with open(f"{project_name}/app/schemas/user.py", "w") as f:
         f.write("""from pydantic import BaseModel
 from typing import Optional
@@ -80,7 +70,6 @@ class User(UserBase):
         orm_mode = True
 """)
 
-    # Create app/crud/user.py
     with open(f"{project_name}/app/crud/user.py", "w") as f:
         f.write("""from sqlalchemy.orm import Session
 from .models import User
@@ -94,7 +83,6 @@ def create_user(db: Session, user: UserCreate):
     return db_user
 """)
 
-    # Create app/database.py
     with open(f"{project_name}/app/database.py", "w") as f:
         f.write("""from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -114,7 +102,6 @@ def get_db():
         db.close()
 """)
 
-    # Create app/routes.py
     with open(f"{project_name}/app/routes.py", "w") as f:
         f.write("""from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -128,28 +115,23 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 """)
 
-    # Create Alembic configuration files
     with open(f"{project_name}/alembic.ini", "w") as f:
         f.write("[alembic]\n")
         f.write("script_location = alembic\n")
         f.write("sqlalchemy.url = sqlite:///./test.db\n")
 
-    # Create README.md
     with open(f"{project_name}/README.md", "w") as f:
         f.write(f"# {project_name}\nThis is a simple FastAPI project structure.\n")
 
-    # Create requirements.txt
     with open(f"{project_name}/requirements.txt", "w") as f:
         f.write("fastapi\nsqlalchemy\npydantic\nalembic\n")
 
-    # Create .env file
     with open(f"{project_name}/.env", "w") as f:
         f.write('DATABASE_URL="sqlite:///./test.db"\n')
 
     print(f"Project structure for '{project_name}' has been created successfully!")
 
 def main():
-    """Main function to parse arguments and create project structure."""
     parser = argparse.ArgumentParser(description="Generate FastAPI project structure")
     parser.add_argument('project_name', type=str, help="Name of the FastAPI project")
     args = parser.parse_args()
@@ -160,3 +142,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
