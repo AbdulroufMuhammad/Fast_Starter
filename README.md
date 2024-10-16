@@ -10,4 +10,4 @@ You can install the package via pip:
 pip install fast_starter
 
 #How to use 
-# fast_starter (Projectname)
+# fast-starter (Projectname)
