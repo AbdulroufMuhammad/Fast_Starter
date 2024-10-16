@@ -18,9 +18,9 @@ setup(
     description='A simple package to quickly set up a FastAPI project structure.',
     long_description=open('README.md').read(),  
     long_description_content_type='text/markdown',
-    url='https://github.com/yourusername/fast_starter',  
-    author='Your Name',  # Replace with your name
-    author_email='your.email@example.com',  # Replace with your email
+    url='https://github.com/AbdulroufMuhammad/Fast_Starter',  
+    author='Abdulrauf muhammad',  
+    author_email='abdulraufmuhammad28@gmail.com',  
     classifiers=[
         'Programming Language :: Python :: 3',
         'Framework :: FastAPI',
